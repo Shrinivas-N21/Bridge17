@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import json
+import re
 
 # ----------------------------
 # SESSION STATE INITIALIZATION
@@ -19,11 +20,31 @@ if "history" not in st.session_state:
 
 
 # ----------------------------
-# LOAD SUPPLIERS DATA
+# LOAD DATA
 # ----------------------------
 def load_suppliers():
     with open("suppliers.json", "r") as f:
         return pd.DataFrame(json.load(f))
+
+
+def load_ngos():
+    with open("ngos.json", "r") as f:
+        return pd.DataFrame(json.load(f))
+
+
+# ----------------------------
+# TEXT EXTRACTION HELPERS
+# ----------------------------
+def extract_sdg(text):
+    match = re.search(r"SDG\s?\d+", text)
+    return match.group(0) if match else None
+
+
+def extract_state(text, states):
+    for state in states:
+        if state.lower() in text.lower():
+            return state
+    return None
 
 
 # ----------------------------
@@ -44,29 +65,28 @@ def login_page():
             st.success("Login successful!")
             st.rerun()
         else:
-            st.error("Please enter all fields")
+            st.error("Please fill all fields.")
 
 
 # ----------------------------
 # MAIN DASHBOARD
 # ----------------------------
 def main_dashboard():
-    st.title("Bridge 17 Dashboard")
 
-    df = load_suppliers()
+    df_suppliers = load_suppliers()
+    df_ngos = load_ngos()
 
     # ---- Sidebar ----
     with st.sidebar:
-        st.title("Navigation")
-
+        st.title("Bridge 17")
         st.write(f"👤 {st.session_state.username}")
         st.write(f"🏢 {st.session_state.sector}")
         st.markdown("---")
 
-        if st.button("View History"):
-            st.subheader("Upload History")
-            for item in st.session_state.history:
-                st.write(item)
+        if st.button("View Upload History"):
+            st.subheader("Uploaded CSR Files")
+            for file in st.session_state.history:
+                st.write("•", file)
 
         st.markdown("---")
 
@@ -76,50 +96,75 @@ def main_dashboard():
             st.session_state.sector = None
             st.rerun()
 
-    # ---- Dashboard Stats ----
-    st.subheader("Supplier Overview")
+    # ---- Dashboard Metrics ----
+    st.title("Bridge 17 Dashboard")
 
     col1, col2 = st.columns(2)
+    col1.metric("Total NGOs", len(df_ngos))
+    col2.metric("Total Suppliers", len(df_suppliers))
 
-    col1.metric("Total Suppliers", len(df))
-    col2.metric("States Covered", df["state"].nunique())
-
-    st.bar_chart(df["sdg_goal"].value_counts())
+    st.subheader("SDG Distribution (Suppliers)")
+    st.bar_chart(df_suppliers["sdg_goal"].value_counts())
 
     st.markdown("---")
 
-    # ---- CSR Upload ----
-    st.subheader("Upload CSR Report")
+    # ----------------------------
+    # MATCHING SECTION
+    # ----------------------------
+    st.subheader("Partnership Matching")
 
-    uploaded_file = st.file_uploader("Upload CSR Report (PDF or TXT)")
+    mode = st.radio(
+        "Choose Matching Mode",
+        ["Auto Match via CSR Upload", "Manual Search"]
+    )
 
-    if uploaded_file is not None:
-        st.success("File uploaded successfully!")
+    # =====================================================
+    # AUTO MATCH MODE
+    # =====================================================
+    if mode == "Auto Match via CSR Upload":
 
-        # Save history
-        st.session_state.history.append(uploaded_file.name)
+        uploaded_file = st.file_uploader("Upload CSR Report (TXT only)")
 
-        st.markdown("### View Matching")
+        if uploaded_file is not None:
 
-        if st.button("Find Matching Suppliers"):
-            # Simple matching example
-            sector = st.session_state.sector
+            content = uploaded_file.read().decode("utf-8")
 
-            if sector == "NGO":
-                matches = df[df["sdg_goal"].str.contains("SDG 6")]
-            elif sector == "PSU":
-                matches = df[df["sdg_goal"].str.contains("SDG 3")]
-            else:
-                matches = df[df["sdg_goal"].str.contains("SDG 4")]
+            # Save history
+            st.session_state.history.append(uploaded_file.name)
 
-            st.subheader("Matching Suppliers")
-            st.dataframe(matches)
+            detected_sdg = extract_sdg(content)
+            detected_state = extract_state(content, df_suppliers["state"].unique())
 
+            st.write(f"Detected SDG: {detected_sdg}")
+            st.write(f"Detected State: {detected_state}")
 
-# ----------------------------
-# ROUTING LOGIC
-# ----------------------------
-if not st.session_state.logged_in:
-    login_page()
-else:
-    main_dashboard()
+            if st.button("Run Auto Matching"):
+
+                if detected_sdg and detected_state:
+
+                    matched_ngos = df_ngos[
+                        (df_ngos["sdg_goal"].str.contains(detected_sdg, na=False)) &
+                        (df_ngos["state"] == detected_state)
+                    ].sort_values(by="trust_score", ascending=False).head(3)
+
+                    matched_suppliers = df_suppliers[
+                        (df_suppliers["sdg_goal"].str.contains(detected_sdg, na=False)) &
+                        (df_suppliers["state"] == detected_state)
+                    ].sort_values(by="reliability", ascending=False).head(3)
+
+                    st.subheader("Top NGO Matches")
+                    st.dataframe(matched_ngos)
+
+                    st.subheader("Top Supplier Matches")
+                    st.dataframe(matched_suppliers)
+
+                else:
+                    st.error("Could not detect SDG or State from CSR file.")
+
+    # =====================================================
+    # MANUAL SEARCH MODE
+    # =====================================================
+    elif mode == "Manual Search":
+
+        selected_state = st.selectbox("Select State", df_suppliers["state"].unique())
+        selected_sdg = st.selectbox("Select SDG", df_suppliers
