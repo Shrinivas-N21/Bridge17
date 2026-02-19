@@ -167,4 +167,31 @@ def main_dashboard():
     elif mode == "Manual Search":
 
         selected_state = st.selectbox("Select State", df_suppliers["state"].unique())
-        selected_sdg = st.selectbox("Select SDG", df_suppliers
+        selected_sdg = st.selectbox("Select SDG", df_suppliers["sdg_goal"].unique())
+
+        if st.button("Search"):
+
+            matched_ngos = df_ngos[
+                (df_ngos["sdg_goal"] == selected_sdg) &
+                (df_ngos["state"] == selected_state)
+            ].sort_values(by="trust_score", ascending=False)
+
+            matched_suppliers = df_suppliers[
+                (df_suppliers["sdg_goal"] == selected_sdg) &
+                (df_suppliers["state"] == selected_state)
+            ].sort_values(by="reliability", ascending=False)
+
+            st.subheader("Matching NGOs")
+            st.dataframe(matched_ngos)
+
+            st.subheader("Matching Suppliers")
+            st.dataframe(matched_suppliers)
+
+
+# ----------------------------
+# ROUTING
+# ----------------------------
+if not st.session_state.logged_in:
+    login_page()
+else:
+    main_dashboard()
