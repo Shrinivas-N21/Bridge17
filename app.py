@@ -23,23 +23,22 @@ st.markdown("""
 /* ============================= */
 [data-testid="stAppViewContainer"] {
     background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    color: #FFFFFF;
 }
 
-/* Force all text to white */
+/* Default Light Text */
 html, body, [class*="css"]  {
-    color: #FFFFFF !important;
+    color: #E6EDF3 !important;   /* Soft light blue-white */
 }
 
 /* ============================= */
 /* SIDEBAR */
 /* ============================= */
 [data-testid="stSidebar"] {
-    background-color: #111827;
+    background-color: #0b1120;
 }
 
 [data-testid="stSidebar"] * {
-    color: #FFFFFF !important;
+    color: #E6EDF3 !important;
 }
 
 /* ============================= */
@@ -48,42 +47,47 @@ html, body, [class*="css"]  {
 h1 {
     font-size: 52px !important;
     font-weight: 800 !important;
-    color: #FFFFFF !important;
+    color: #F8FAFC !important;   /* Slightly brighter */
 }
 
 h2 {
     font-size: 36px !important;
     font-weight: 700 !important;
-    color: #E5E7EB !important;
+    color: #E2E8F0 !important;
 }
 
 h3 {
     font-size: 28px !important;
-    color: #D1D5DB !important;
+    color: #CBD5E1 !important;
+}
+
+/* Paragraph & Normal Text */
+p, span, label {
+    color: #D1D9E6 !important;
 }
 
 /* ============================= */
 /* METRIC CARDS */
 /* ============================= */
 .metric-card {
-    background: rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.08);
     padding: 25px;
     border-radius: 15px;
     text-align: center;
     backdrop-filter: blur(8px);
-    color: white;
+    color: #F1F5F9;
 }
 
 /* ============================= */
 /* SECTION CARDS */
 /* ============================= */
 .section-card {
-    background: rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.05);
     padding: 30px;
     border-radius: 18px;
     margin-bottom: 30px;
     backdrop-filter: blur(10px);
-    color: white;
+    color: #E6EDF3;
 }
 
 /* ============================= */
@@ -91,7 +95,7 @@ h3 {
 /* ============================= */
 .stButton>button {
     background: linear-gradient(90deg, #00c6ff, #0072ff);
-    color: white;
+    color: #F8FAFC;
     border-radius: 10px;
     height: 50px;
     font-weight: 600;
@@ -108,21 +112,21 @@ h3 {
 /* INPUT FIELDS */
 /* ============================= */
 input, textarea {
-    background-color: #1f2937 !important;
-    color: white !important;
+    background-color: #1e293b !important;
+    color: #F1F5F9 !important;
 }
 
 /* ============================= */
-/* DATAFRAME STYLING */
+/* DATAFRAME */
 /* ============================= */
 [data-testid="stDataFrame"] {
-    background-color: rgba(255,255,255,0.05);
-    color: white;
+    background-color: rgba(255,255,255,0.04);
+    color: #E6EDF3 !important;
 }
 
-/* Fix metric text */
+/* Metrics */
 [data-testid="stMetric"] {
-    color: white !important;
+    color: #F1F5F9 !important;
 }
 
 </style>
