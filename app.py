@@ -132,28 +132,40 @@ input, textarea, .stTextInput input {
     color: #F1F5F9 !important;
 }
 /* ============================= */
-/* SELECTBOX TEXT BLACK */
+/* FIX SELECTBOX FULLY */
 /* ============================= */
 
-/* Selected value text */
-div[data-baseweb="select"] > div {
+/* Selected value container */
+div[data-baseweb="select"] {
+    background-color: white !important;
+    border-radius: 8px !important;
+}
+
+/* Selected text */
+div[data-baseweb="select"] span {
     color: black !important;
 }
 
-/* Dropdown input text */
+/* Input text */
 div[data-baseweb="select"] input {
     color: black !important;
 }
 
-/* Dropdown menu items */
-div[role="listbox"] * {
-    color: black !important;
-}
-
-/* Optional: make dropdown background white for contrast */
+/* Dropdown menu background */
 div[role="listbox"] {
     background-color: white !important;
 }
+
+/* Dropdown options text */
+div[role="option"] {
+    color: black !important;
+}
+
+/* Hover effect */
+div[role="option"]:hover {
+    background-color: #f0f0f0 !important;
+}
+
 
 </style>
 """, unsafe_allow_html=True)
