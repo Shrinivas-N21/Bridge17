@@ -1,73 +1,125 @@
-# app.py
 import streamlit as st
 import pandas as pd
+import json
 
-from agents import ngo_agent, csr_agent, supplier_agent, decision_agent
-from auth import initialize_session, login_page
-from dashboard import show_overview
-from history import add_to_history, show_history
-from utils import load_json
+# ----------------------------
+# SESSION STATE INITIALIZATION
+# ----------------------------
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
 
-st.set_page_config(page_title="Bridge17", layout="wide")
+if "username" not in st.session_state:
+    st.session_state.username = None
 
-initialize_session()
+if "sector" not in st.session_state:
+    st.session_state.sector = None
 
-if not st.session_state.authenticated:
+if "history" not in st.session_state:
+    st.session_state.history = []
+
+
+# ----------------------------
+# LOAD SUPPLIERS DATA
+# ----------------------------
+def load_suppliers():
+    with open("suppliers.json", "r") as f:
+        return pd.DataFrame(json.load(f))
+
+
+# ----------------------------
+# LOGIN PAGE
+# ----------------------------
+def login_page():
+    st.title("Bridge 17 – AI Partnership Architect")
+
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+    sector = st.selectbox("Select Sector", ["NGO", "PSU", "Government"])
+
+    if st.button("Login"):
+        if username and password:
+            st.session_state.logged_in = True
+            st.session_state.username = username
+            st.session_state.sector = sector
+            st.success("Login successful!")
+            st.rerun()
+        else:
+            st.error("Please enter all fields")
+
+
+# ----------------------------
+# MAIN DASHBOARD
+# ----------------------------
+def main_dashboard():
+    st.title("Bridge 17 Dashboard")
+
+    df = load_suppliers()
+
+    # ---- Sidebar ----
+    with st.sidebar:
+        st.title("Navigation")
+
+        st.write(f"👤 {st.session_state.username}")
+        st.write(f"🏢 {st.session_state.sector}")
+        st.markdown("---")
+
+        if st.button("View History"):
+            st.subheader("Upload History")
+            for item in st.session_state.history:
+                st.write(item)
+
+        st.markdown("---")
+
+        if st.button("Logout"):
+            st.session_state.logged_in = False
+            st.session_state.username = None
+            st.session_state.sector = None
+            st.rerun()
+
+    # ---- Dashboard Stats ----
+    st.subheader("Supplier Overview")
+
+    col1, col2 = st.columns(2)
+
+    col1.metric("Total Suppliers", len(df))
+    col2.metric("States Covered", df["state"].nunique())
+
+    st.bar_chart(df["sdg_goal"].value_counts())
+
+    st.markdown("---")
+
+    # ---- CSR Upload ----
+    st.subheader("Upload CSR Report")
+
+    uploaded_file = st.file_uploader("Upload CSR Report (PDF or TXT)")
+
+    if uploaded_file is not None:
+        st.success("File uploaded successfully!")
+
+        # Save history
+        st.session_state.history.append(uploaded_file.name)
+
+        st.markdown("### View Matching")
+
+        if st.button("Find Matching Suppliers"):
+            # Simple matching example
+            sector = st.session_state.sector
+
+            if sector == "NGO":
+                matches = df[df["sdg_goal"].str.contains("SDG 6")]
+            elif sector == "PSU":
+                matches = df[df["sdg_goal"].str.contains("SDG 3")]
+            else:
+                matches = df[df["sdg_goal"].str.contains("SDG 4")]
+
+            st.subheader("Matching Suppliers")
+            st.dataframe(matches)
+
+
+# ----------------------------
+# ROUTING LOGIC
+# ----------------------------
+if not st.session_state.logged_in:
     login_page()
-    st.stop()
-
-# Load Data
-ngos = load_json("ngos.json")
-suppliers = load_json("suppliers.json")
-
-uploaded_file = st.file_uploader("Upload CSR JSON Report", type=["json"])
-if uploaded_file:
-    csr_data = load_json(uploaded_file)
 else:
-    csr_data = load_json("csr.json")
-
-show_overview(ngos)
-show_history()
-
-states = sorted(list(set(n["state"] for n in ngos)))
-sdgs = sorted(list(set(n["sdg_goal"] for n in ngos)))
-
-selected_state = st.selectbox("Select State", states)
-selected_sdg = st.selectbox("Select SDG Goal", sdgs)
-
-if st.button("🔍 View Matchings"):
-
-    filtered = [
-        n for n in ngos
-        if n["state"] == selected_state
-        and n["sdg_goal"] == selected_sdg
-    ]
-
-    results = []
-
-    for ngo in filtered:
-        ngo_score, risk, _ = ngo_agent(ngo)
-        csr_score, csr_amount, _ = csr_agent(ngo, csr_data)
-        supplier_score, supplier_name, _ = supplier_agent(ngo, suppliers)
-        final_score = decision_agent(ngo_score, csr_score, supplier_score)
-
-        results.append({
-            "NGO": ngo["name"],
-            "Score": final_score,
-            "Risk": risk,
-            "CSR": csr_amount,
-            "Supplier": supplier_name
-        })
-
-    if results:
-        results = sorted(results, key=lambda x: x["Score"], reverse=True)
-        top = results[0]
-
-        st.success(f"🏆 Top Recommendation: {top['NGO']} ({top['Score']})")
-
-        df = pd.DataFrame(results)
-        st.dataframe(df)
-
-        add_to_history(selected_state, selected_sdg, top["NGO"], top["Score"])
-    else:
-        st.warning("No matching NGOs found.")
+    main_dashboard()
