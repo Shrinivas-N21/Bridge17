@@ -1,17 +1,19 @@
-state,sdg_goal,csr_amount
-Maharashtra,SDG 6 – Clean Water & Sanitation,85000000
-Maharashtra,SDG 4 – Quality Education,60000000
-Tamil Nadu,SDG 3 – Good Health & Well-being,62000000
-Tamil Nadu,SDG 4 – Quality Education,50000000
-Karnataka,SDG 4 – Quality Education,50000000
-Karnataka,SDG 8 – Decent Work & Economic Growth,45000000
-Gujarat,SDG 8 – Decent Work & Economic Growth,45000000
-Gujarat,SDG 3 – Good Health & Well-being,40000000
-Rajasthan,SDG 5 – Gender Equality,30000000
-Rajasthan,SDG 4 – Quality Education,25000000
-West Bengal,SDG 6 – Clean Water & Sanitation,40000000
-West Bengal,SDG 3 – Good Health & Well-being,38000000
-Delhi,SDG 3 – Good Health & Well-being,60000000
-Delhi,SDG 4 – Quality Education,55000000
-Andhra Pradesh,SDG 4 – Quality Education,75000000
-Andhra Pradesh,SDG 6 – Clean Water & Sanitation,50000000
+state,Primary_SDG,csr_amount
+Maharashtra,SDG 6: Clean Water & Sanitation,85000000
+Maharashtra,SDG 4: Quality Education,60000000
+Tamil Nadu,SDG 3: Good Health & Well-being,62000000
+Tamil Nadu,SDG 4: Quality Education,50000000
+Karnataka,SDG 4: Quality Education,50000000
+Karnataka,SDG 8: Decent Work & Economic Growth,45000000
+Gujarat,SDG 8: Decent Work & Economic Growth,45000000
+Gujarat,SDG 3: Good Health & Well-being,40000000
+Rajasthan,SDG 5: Gender Equality,30000000
+Rajasthan,SDG 4: Quality Education,25000000
+West Bengal,SDG 6: Clean Water & Sanitation,40000000
+West Bengal,SDG 3: Good Health & Well-being,38000000
+Delhi,SDG 3: Good Health & Well-being,60000000
+Delhi,SDG 4: Quality Education,55000000
+Andhra Pradesh,SDG 4: Quality Education,75000000
+Andhra Pradesh,SDG 6: Clean Water & Sanitation,50000000
+Odisha,SDG 17: Partnerships,30000000
+Kerala,SDG 13: Climate Action,45000000
