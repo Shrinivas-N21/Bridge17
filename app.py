@@ -403,36 +403,52 @@ def matchmaking_page():
 
     st.markdown("</div>", unsafe_allow_html=True)
 
+# ----------------------------
+# SIDEBAR
+# ----------------------------
 def sidebar():
     with st.sidebar:
-        st.title("Bridge 17")
-        st.write(f"👤 {st.session_state.username}")
-        st.write(f"🏢 {st.session_state.sector}")
-        st.markdown("---")
-
-        if st.button("📊 Dashboard"):
-            st.session_state.page = "dashboard"
-            st.rerun()
-
-        if st.button("🤝 Matchmaking"):
-            st.session_state.page = "matchmaking"
-            st.rerun()
-
-        # Strategic Friction Engine (external app)
-        import streamlit as st_ext
-        st_ext.link_button(
-            "🧠 Strategic Friction Engine",
-            "https://bridge-17.streamlit.app",
-            new_tab=True
-        )
+        # App title
+        st.markdown("<h2 style='color:#E6EDF3;'>🌍 Bridge 17</h2>", unsafe_allow_html=True)
+        
+        # User info
+        if st.session_state.logged_in:
+            st.markdown(f"👤 <span style='color:#E6EDF3'>{st.session_state.username}</span>", unsafe_allow_html=True)
+            st.markdown(f"🏢 <span style='color:#E6EDF3'>{st.session_state.sector}</span>", unsafe_allow_html=True)
 
         st.markdown("---")
 
+        # Logout button
         if st.button("Logout"):
             st.session_state.logged_in = False
             st.session_state.page = "dashboard"
             st.rerun()
 
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # Strategic Friction Engine Link (opens in new tab)
+        st.markdown(
+            """
+            <div style="text-align:center;">
+                <a href="https://bridge-17.streamlit.app" target="_blank">
+                    <button style="
+                        background: linear-gradient(90deg, #00c6ff, #0072ff);
+                        color: #F8FAFC;
+                        border-radius: 10px;
+                        height: 50px;
+                        width: 100%;
+                        font-weight: 600;
+                        font-size: 16px;
+                        border: none;
+                        cursor: pointer;
+                    ">
+                        🧠 Strategic Friction Engine
+                    </button>
+                </a>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
 # ----------------------------
 # ROUTING
