@@ -403,9 +403,6 @@ def matchmaking_page():
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-# ----------------------------
-# SIDEBAR
-# ----------------------------
 def sidebar():
     with st.sidebar:
         st.title("Bridge 17")
@@ -413,10 +410,29 @@ def sidebar():
         st.write(f"🏢 {st.session_state.sector}")
         st.markdown("---")
 
+        if st.button("📊 Dashboard"):
+            st.session_state.page = "dashboard"
+            st.rerun()
+
+        if st.button("🤝 Matchmaking"):
+            st.session_state.page = "matchmaking"
+            st.rerun()
+
+        # Strategic Friction Engine (external app)
+        import streamlit as st_ext
+        st_ext.link_button(
+            "🧠 Strategic Friction Engine",
+            "https://your-friction-engine-app.streamlit.app",
+            new_tab=True
+        )
+
+        st.markdown("---")
+
         if st.button("Logout"):
             st.session_state.logged_in = False
             st.session_state.page = "dashboard"
             st.rerun()
+
 
 # ----------------------------
 # ROUTING
