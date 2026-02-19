@@ -422,7 +422,7 @@ def sidebar():
         import streamlit as st_ext
         st_ext.link_button(
             "🧠 Strategic Friction Engine",
-            "https://your-friction-engine-app.streamlit.app",
+            "https://bridge-17.streamlit.app",
             new_tab=True
         )
 
