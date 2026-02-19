@@ -1,0 +1,28 @@
+[
+  {"ngo_id":"MH-WAT-001","name":"WaterHope Foundation","state":"Maharashtra","sdg_goal":"SDG 6 – Clean Water & Sanitation","trust_score":0.6,"certified":true,"trustee_contact":"Sita Reddy - +91 9876543224","about":"Rural water and sanitation projects."},
+  {"ngo_id":"MH-EDU-001","name":"EduFuture Society","state":"Maharashtra","sdg_goal":"SDG 4 – Quality Education","trust_score":0.7,"certified":true,"trustee_contact":"Ravi Patil - +91 9876543225","about":"Supporting rural schools and literacy programs."},
+  {"ngo_id":"MH-ENV-001","name":"Green Village NGO","state":"Maharashtra","sdg_goal":"SDG 13 – Climate Action","trust_score":0.5,"certified":true,"trustee_contact":"Anjali Deshpande - +91 9876543226","about":"Environmental awareness and tree planting."},
+
+  {"ngo_id":"TN-HEA-001","name":"Rural Health Trust","state":"Tamil Nadu","sdg_goal":"SDG 3 – Good Health & Well-being","trust_score":0.8,"certified":true,"trustee_contact":"Dr. Venkatesh - +91 9876543227","about":"Healthcare support in rural villages."},
+  {"ngo_id":"TN-EDU-001","name":"Bright Schools Initiative","state":"Tamil Nadu","sdg_goal":"SDG 4 – Quality Education","trust_score":0.5,"certified":true,"trustee_contact":"Meera Kumar - +91 9876543228","about":"Improving school quality and digital literacy."},
+  {"ngo_id":"TN-ENV-001","name":"LifeGreen Foundation","state":"Tamil Nadu","sdg_goal":"SDG 13 – Climate Action","trust_score":0.45,"certified":true,"trustee_contact":"Rina Das - +91 9876543229","about":"Tree planting and environmental protection."},
+
+  {"ngo_id":"KA-EDU-001","name":"EduTech Supplies","state":"Karnataka","sdg_goal":"SDG 4 – Quality Education","trust_score":0.7,"certified":true,"trustee_contact":"Rohit Rao - +91 9876543230","about":"Digital classrooms and learning tools."},
+  {"ngo_id":"KA-HEA-001","name":"HealthBridge Karnataka","state":"Karnataka","sdg_goal":"SDG 3 – Good Health & Well-being","trust_score":0.65,"certified":true,"trustee_contact":"Dr. Priya Nair - +91 9876543231","about":"Rural health programs and mobile clinics."},
+  {"ngo_id":"KA-SKILL-001","name":"SkillUp India","state":"Karnataka","sdg_goal":"SDG 8 – Decent Work & Economic Growth","trust_score":0.6,"certified":true,"trustee_contact":"Vikram Shetty - +91 9876543232","about":"Vocational training and employment support."},
+
+  {"ngo_id":"GJ-SKILL-001","name":"Youth Career Builders","state":"Gujarat","sdg_goal":"SDG 8 – Decent Work & Economic Growth","trust_score":0.6,"certified":true,"trustee_contact":"Rina Shah - +91 9876543233","about":"Youth skill development and entrepreneurship."},
+  {"ngo_id":"GJ-HEA-001","name":"Gujarat HealthNet","state":"Gujarat","sdg_goal":"SDG 3 – Good Health & Well-being","trust_score":0.65,"certified":true,"trustee_contact":"Dr. Amit Patel - +91 9876543234","about":"Healthcare and awareness programs."},
+
+  {"ngo_id":"RJ-WOM-001","name":"WomenRise Collective","state":"Rajasthan","sdg_goal":"SDG 5 – Gender Equality","trust_score":0.65,"certified":true,"trustee_contact":"Meera Singh - +91 9876543235","about":"Empowering women in rural areas."},
+  {"ngo_id":"RJ-EDU-001","name":"Rural Learning Mission","state":"Rajasthan","sdg_goal":"SDG 4 – Quality Education","trust_score":0.5,"certified":true,"trustee_contact":"Rakesh Meena - +91 9876543236","about":"Education support for village schools."},
+
+  {"ngo_id":"WB-WAT-001","name":"CleanRiver Initiative","state":"West Bengal","sdg_goal":"SDG 6 – Clean Water & Sanitation","trust_score":0.58,"certified":true,"trustee_contact":"Sanjay Sen - +91 9876543237","about":"Water purification and river cleanup programs."},
+  {"ngo_id":"WB-HEA-001","name":"HealthBridge East","state":"West Bengal","sdg_goal":"SDG 3 – Good Health & Well-being","trust_score":0.62,"certified":true,"trustee_contact":"Dr. Ananya Chatterjee - +91 9876543238","about":"Health services for rural communities."},
+
+  {"ngo_id":"MH-WAT-002","name":"Urban Sanitation Trust","state":"Maharashtra","sdg_goal":"SDG 6 – Clean Water & Sanitation","trust_score":0.75,"certified":true,"trustee_contact":"Ajay Deshmukh - +91 9876543239","about":"Sanitation projects in urban slums."},
+  {"ngo_id":"TN-WAT-001","name":"CleanWater Tamil Nadu","state":"Tamil Nadu","sdg_goal":"SDG 6 – Clean Water & Sanitation","trust_score":0.55,"certified":true,"trustee_contact":"Sita Ram - +91 9876543240","about":"Safe drinking water projects."},
+  
+  {"ngo_id":"DL-HEA-001","name":"Delhi Health Foundation","state":"Delhi","sdg_goal":"SDG 3 – Good Health & Well-being","trust_score":0.7,"certified":true,"trustee_contact":"Dr. Anil Kapoor - +91 9876543241","about":"Healthcare support in urban and semi-urban areas."},
+  {"ngo_id":"DL-EDU-001","name":"Delhi EduTrust","state":"Delhi","sdg_goal":"SDG 4 – Quality Education","trust_score":0.65,"certified":true,"trustee_contact":"Neha Sharma - +91 9876543242","about":"School and digital literacy programs."}
+]

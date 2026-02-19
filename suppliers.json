@@ -1,0 +1,14 @@
+[
+  {"name":"Rural Pipe Solutions","state":"Maharashtra","sdg_goal":"SDG 6 – Clean Water & Sanitation","reliability":0.85},
+  {"name":"AquaInfra Systems","state":"Maharashtra","sdg_goal":"SDG 6 – Clean Water & Sanitation","reliability":0.78},
+  {"name":"EduTech Supplies","state":"Karnataka","sdg_goal":"SDG 4 – Quality Education","reliability":0.88},
+  {"name":"SmartClass Providers","state":"Karnataka","sdg_goal":"SDG 4 – Quality Education","reliability":0.76},
+  {"name":"SkillTools Gujarat","state":"Gujarat","sdg_goal":"SDG 8 – Decent Work & Economic Growth","reliability":0.84},
+  {"name":"WomenSkill Enterprises","state":"Rajasthan","sdg_goal":"SDG 5 – Gender Equality","reliability":0.8},
+  {"name":"HealthEquip India","state":"Tamil Nadu","sdg_goal":"SDG 3 – Good Health & Well-being","reliability":0.82},
+  {"name":"MedSupply South","state":"Tamil Nadu","sdg_goal":"SDG 3 – Good Health & Well-being","reliability":0.74},
+  {"name":"EastWater Logistics","state":"West Bengal","sdg_goal":"SDG 6 – Clean Water & Sanitation","reliability":0.81},
+  {"name":"Bengal Health Supplies","state":"West Bengal","sdg_goal":"SDG 3 – Good Health & Well-being","reliability":0.79},
+  {"name":"Delhi Health Supplies","state":"Delhi","sdg_goal":"SDG 3 – Good Health & Well-being","reliability":0.75},
+  {"name":"Delhi Edu Suppliers","state":"Delhi","sdg_goal":"SDG 4 – Quality Education","reliability":0.72}
+]
