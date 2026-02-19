@@ -18,51 +18,77 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* Main Background */
+/* ============================= */
+/* MAIN BACKGROUND */
+/* ============================= */
 [data-testid="stAppViewContainer"] {
     background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    color: white;
+    color: #FFFFFF;
 }
 
-/* Sidebar */
+/* Force all text to white */
+html, body, [class*="css"]  {
+    color: #FFFFFF !important;
+}
+
+/* ============================= */
+/* SIDEBAR */
+/* ============================= */
 [data-testid="stSidebar"] {
     background-color: #111827;
 }
 
-/* Headings Bigger */
+[data-testid="stSidebar"] * {
+    color: #FFFFFF !important;
+}
+
+/* ============================= */
+/* HEADINGS */
+/* ============================= */
 h1 {
     font-size: 52px !important;
     font-weight: 800 !important;
+    color: #FFFFFF !important;
 }
 
 h2 {
     font-size: 36px !important;
     font-weight: 700 !important;
+    color: #E5E7EB !important;
 }
 
 h3 {
     font-size: 28px !important;
+    color: #D1D5DB !important;
 }
 
-/* Metric Cards */
+/* ============================= */
+/* METRIC CARDS */
+/* ============================= */
 .metric-card {
-    background: rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.12);
     padding: 25px;
     border-radius: 15px;
     text-align: center;
     backdrop-filter: blur(8px);
+    color: white;
 }
 
-/* Section Cards */
+/* ============================= */
+/* SECTION CARDS */
+/* ============================= */
 .section-card {
-    background: rgba(255,255,255,0.05);
+    background: rgba(255,255,255,0.08);
     padding: 30px;
     border-radius: 18px;
     margin-bottom: 30px;
     backdrop-filter: blur(10px);
+    color: white;
 }
 
-/* Buttons */
+/* ============================= */
+/* BUTTONS */
+/* ============================= */
 .stButton>button {
     background: linear-gradient(90deg, #00c6ff, #0072ff);
     color: white;
@@ -78,8 +104,30 @@ h3 {
     background: linear-gradient(90deg, #0072ff, #00c6ff);
 }
 
+/* ============================= */
+/* INPUT FIELDS */
+/* ============================= */
+input, textarea {
+    background-color: #1f2937 !important;
+    color: white !important;
+}
+
+/* ============================= */
+/* DATAFRAME STYLING */
+/* ============================= */
+[data-testid="stDataFrame"] {
+    background-color: rgba(255,255,255,0.05);
+    color: white;
+}
+
+/* Fix metric text */
+[data-testid="stMetric"] {
+    color: white !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
+
 
 # ----------------------------
 # SESSION STATE
