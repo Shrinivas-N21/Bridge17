@@ -4,7 +4,7 @@ import json
 import re
 
 # ----------------------------
-# SESSION STATE INITIALIZATION
+# SESSION STATE INIT
 # ----------------------------
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
@@ -14,6 +14,9 @@ if "username" not in st.session_state:
 
 if "sector" not in st.session_state:
     st.session_state.sector = None
+
+if "page" not in st.session_state:
+    st.session_state.page = "dashboard"
 
 if "history" not in st.session_state:
     st.session_state.history = []
@@ -33,7 +36,7 @@ def load_ngos():
 
 
 # ----------------------------
-# TEXT EXTRACTION HELPERS
+# HELPERS
 # ----------------------------
 def extract_sdg(text):
     match = re.search(r"SDG\s?\d+", text)
@@ -62,65 +65,105 @@ def login_page():
             st.session_state.logged_in = True
             st.session_state.username = username
             st.session_state.sector = sector
-            st.success("Login successful!")
+            st.session_state.page = "dashboard"
             st.rerun()
         else:
             st.error("Please fill all fields.")
 
 
 # ----------------------------
-# MAIN DASHBOARD
+# DASHBOARD PAGE
 # ----------------------------
-def main_dashboard():
+def dashboard_page():
 
     df_suppliers = load_suppliers()
     df_ngos = load_ngos()
 
-    # ---- Sidebar ----
-    with st.sidebar:
-        st.title("Bridge 17")
-        st.write(f"👤 {st.session_state.username}")
-        st.write(f"🏢 {st.session_state.sector}")
-        st.markdown("---")
+    st.title("📊 Bridge 17 Analytics Dashboard")
 
-        if st.button("View Upload History"):
-            st.subheader("Uploaded CSR Files")
-            for file in st.session_state.history:
-                st.write("•", file)
+    # ---- Metrics ----
+    col1, col2, col3 = st.columns(3)
 
-        st.markdown("---")
-
-        if st.button("Logout"):
-            st.session_state.logged_in = False
-            st.session_state.username = None
-            st.session_state.sector = None
-            st.rerun()
-
-    # ---- Dashboard Metrics ----
-    st.title("Bridge 17 Dashboard")
-
-    col1, col2 = st.columns(2)
     col1.metric("Total NGOs", len(df_ngos))
     col2.metric("Total Suppliers", len(df_suppliers))
-
-    st.subheader("SDG Distribution (Suppliers)")
-    st.bar_chart(df_suppliers["sdg_goal"].value_counts())
+    col3.metric("States Covered", df_ngos["state"].nunique())
 
     st.markdown("---")
 
-    # ----------------------------
-    # MATCHING SECTION
-    # ----------------------------
-    st.subheader("Partnership Matching")
+    # ---- Analytics Charts ----
+    st.subheader("SDG Distribution Overview")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown("### NGOs by SDG")
+        st.bar_chart(df_ngos["sdg_goal"].value_counts())
+
+    with col2:
+        st.markdown("### Suppliers by SDG")
+        st.bar_chart(df_suppliers["sdg_goal"].value_counts())
+
+    st.markdown("---")
+
+    col3, col4 = st.columns(2)
+
+    with col3:
+        st.markdown("### NGOs by State")
+        st.bar_chart(df_ngos["state"].value_counts())
+
+    with col4:
+        st.markdown("### Average NGO Trust Score by State")
+        avg_trust = df_ngos.groupby("state")["trust_score"].mean()
+        st.bar_chart(avg_trust)
+
+    st.markdown("---")
+
+    # ---- Matchmaking Info Section ----
+    st.subheader("🤝 AI Partnership Matchmaking")
+
+    st.info(
+        """
+        The Matchmaking Engine automatically connects CSR initiatives 
+        with the most suitable NGOs and Suppliers based on:
+        
+        • SDG alignment  
+        • Geographic location  
+        • Trust & Reliability scores  
+        
+        You can either upload a CSR report for automatic matching 
+        or manually search by State and SDG.
+        """
+    )
+
+    if st.button("Go to Matchmaking"):
+        st.session_state.page = "matchmaking"
+        st.rerun()
+
+
+# ----------------------------
+# MATCHMAKING PAGE
+# ----------------------------
+def matchmaking_page():
+
+    df_suppliers = load_suppliers()
+    df_ngos = load_ngos()
+
+    st.title("🤖 AI Matchmaking Engine")
+
+    if st.button("⬅ Back to Dashboard"):
+        st.session_state.page = "dashboard"
+        st.rerun()
+
+    st.markdown("---")
 
     mode = st.radio(
         "Choose Matching Mode",
         ["Auto Match via CSR Upload", "Manual Search"]
     )
 
-    # =====================================================
-    # AUTO MATCH MODE
-    # =====================================================
+    # ------------------------
+    # AUTO MATCH
+    # ------------------------
     if mode == "Auto Match via CSR Upload":
 
         uploaded_file = st.file_uploader("Upload CSR Report (TXT only)")
@@ -128,8 +171,6 @@ def main_dashboard():
         if uploaded_file is not None:
 
             content = uploaded_file.read().decode("utf-8")
-
-            # Save history
             st.session_state.history.append(uploaded_file.name)
 
             detected_sdg = extract_sdg(content)
@@ -140,34 +181,29 @@ def main_dashboard():
 
             if st.button("Run Auto Matching"):
 
-                if detected_sdg and detected_state:
+                matched_ngos = df_ngos[
+                    (df_ngos["sdg_goal"].str.contains(detected_sdg, na=False)) &
+                    (df_ngos["state"] == detected_state)
+                ].sort_values(by="trust_score", ascending=False)
 
-                    matched_ngos = df_ngos[
-                        (df_ngos["sdg_goal"].str.contains(detected_sdg, na=False)) &
-                        (df_ngos["state"] == detected_state)
-                    ].sort_values(by="trust_score", ascending=False).head(3)
+                matched_suppliers = df_suppliers[
+                    (df_suppliers["sdg_goal"].str.contains(detected_sdg, na=False)) &
+                    (df_suppliers["state"] == detected_state)
+                ].sort_values(by="reliability", ascending=False)
 
-                    matched_suppliers = df_suppliers[
-                        (df_suppliers["sdg_goal"].str.contains(detected_sdg, na=False)) &
-                        (df_suppliers["state"] == detected_state)
-                    ].sort_values(by="reliability", ascending=False).head(3)
+                st.subheader("Top NGO Matches")
+                st.dataframe(matched_ngos.head(5))
 
-                    st.subheader("Top NGO Matches")
-                    st.dataframe(matched_ngos)
+                st.subheader("Top Supplier Matches")
+                st.dataframe(matched_suppliers.head(5))
 
-                    st.subheader("Top Supplier Matches")
-                    st.dataframe(matched_suppliers)
-
-                else:
-                    st.error("Could not detect SDG or State from CSR file.")
-
-    # =====================================================
-    # MANUAL SEARCH MODE
-    # =====================================================
+    # ------------------------
+    # MANUAL SEARCH
+    # ------------------------
     elif mode == "Manual Search":
 
-        selected_state = st.selectbox("Select State", df_suppliers["state"].unique())
-        selected_sdg = st.selectbox("Select SDG", df_suppliers["sdg_goal"].unique())
+        selected_state = st.selectbox("Select State", df_ngos["state"].unique())
+        selected_sdg = st.selectbox("Select SDG", df_ngos["sdg_goal"].unique())
 
         if st.button("Search"):
 
@@ -189,9 +225,29 @@ def main_dashboard():
 
 
 # ----------------------------
+# SIDEBAR GLOBAL
+# ----------------------------
+def sidebar():
+    with st.sidebar:
+        st.title("Bridge 17")
+        st.write(f"👤 {st.session_state.username}")
+        st.write(f"🏢 {st.session_state.sector}")
+        st.markdown("---")
+
+        if st.button("Logout"):
+            st.session_state.logged_in = False
+            st.session_state.page = "dashboard"
+            st.rerun()
+
+
+# ----------------------------
 # ROUTING
 # ----------------------------
 if not st.session_state.logged_in:
     login_page()
 else:
-    main_dashboard()
+    sidebar()
+    if st.session_state.page == "dashboard":
+        dashboard_page()
+    elif st.session_state.page == "matchmaking":
+        matchmaking_page()
