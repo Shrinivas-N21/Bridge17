@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 import json
-import re
 
 # ----------------------------
 # PAGE CONFIG
@@ -13,151 +13,113 @@ st.set_page_config(
 )
 
 # ----------------------------
-# PREMIUM UI STYLING
+# PREMIUM HIGH-CONTRAST UI
 # ----------------------------
 st.markdown("""
 <style>
 
-/* Main Background */
+/* Background */
 [data-testid="stAppViewContainer"] {
     background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    color: white;
+    color: white !important;
 }
 
-/* Sidebar */
-[data-testid="stSidebar"] {
-    background-color: #111827;
+/* Force all text white */
+html, body, [class*="css"] {
+    color: white !important;
 }
 
-/* Headings Bigger */
+/* Headings */
 h1 {
     font-size: 52px !important;
     font-weight: 800 !important;
 }
 
 h2 {
-    font-size: 36px !important;
+    font-size: 38px !important;
     font-weight: 700 !important;
 }
 
 h3 {
     font-size: 28px !important;
+    font-weight: 600 !important;
 }
 
-/* Metric Cards */
+/* Sidebar */
+[data-testid="stSidebar"] {
+    background: #111827;
+}
+[data-testid="stSidebar"] * {
+    color: white !important;
+}
+
+/* Cards */
 .metric-card {
-    background: rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.12);
     padding: 25px;
     border-radius: 15px;
     text-align: center;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(10px);
 }
 
-/* Section Cards */
 .section-card {
-    background: rgba(255,255,255,0.05);
+    background: rgba(255,255,255,0.08);
     padding: 30px;
     border-radius: 18px;
     margin-bottom: 30px;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
 }
 
 /* Buttons */
 .stButton>button {
     background: linear-gradient(90deg, #00c6ff, #0072ff);
-    color: white;
+    color: white !important;
     border-radius: 10px;
     height: 50px;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 16px;
     border: none;
 }
-
 .stButton>button:hover {
-    transform: scale(1.03);
     background: linear-gradient(90deg, #0072ff, #00c6ff);
+    transform: scale(1.03);
+}
+
+/* Metric styling */
+[data-testid="stMetricValue"] {
+    font-size: 32px !important;
+    font-weight: 800 !important;
+}
+[data-testid="stMetricLabel"] {
+    font-size: 18px !important;
+    color: #d1d5db !important;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
 # ----------------------------
-# SESSION STATE
-# ----------------------------
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
-
-if "username" not in st.session_state:
-    st.session_state.username = None
-
-if "sector" not in st.session_state:
-    st.session_state.sector = None
-
-if "page" not in st.session_state:
-    st.session_state.page = "dashboard"
-
-if "history" not in st.session_state:
-    st.session_state.history = []
-
-# ----------------------------
 # LOAD DATA
 # ----------------------------
-def load_suppliers():
-    with open("suppliers.json", "r") as f:
-        return pd.DataFrame(json.load(f))
-
-def load_ngos():
-    with open("ngos.json", "r") as f:
-        return pd.DataFrame(json.load(f))
+df_ngos = pd.read_csv("ngos.csv")
+df_suppliers = pd.read_csv("suppliers.csv")
 
 # ----------------------------
-# HELPERS
+# SESSION STATE
 # ----------------------------
-def extract_sdg(text):
-    match = re.search(r"SDG\s?\d+", text)
-    return match.group(0) if match else None
-
-def extract_state(text, states):
-    for state in states:
-        if state.lower() in text.lower():
-            return state
-    return None
-
-# ----------------------------
-# LOGIN PAGE
-# ----------------------------
-def login_page():
-    st.markdown("<h1 style='text-align:center;'>🌍 Bridge 17</h1>", unsafe_allow_html=True)
-    st.markdown("<h3 style='text-align:center; color:lightgray;'>AI Partnership Architect</h3>", unsafe_allow_html=True)
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
-    sector = st.selectbox("Select Sector", ["NGO", "PSU", "Government"])
-
-    if st.button("Login"):
-        if username and password:
-            st.session_state.logged_in = True
-            st.session_state.username = username
-            st.session_state.sector = sector
-            st.session_state.page = "dashboard"
-            st.rerun()
-        else:
-            st.error("Please fill all fields.")
+if "page" not in st.session_state:
+    st.session_state.page = "dashboard"
 
 # ----------------------------
 # DASHBOARD PAGE
 # ----------------------------
 def dashboard_page():
 
-    df_suppliers = load_suppliers()
-    df_ngos = load_ngos()
-
-    st.markdown("<h1 style='text-align:center;'>📊 Analytics Dashboard</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center; color:lightgray;'>Real-time SDG Partnership Intelligence</p>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center;'>🌍 Bridge 17 Analytics Dashboard</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center; color:lightgray;'>AI-powered SDG Partnership Intelligence Platform</p>", unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # Metrics
+    # ---- Metrics ----
     col1, col2, col3 = st.columns(3)
 
     with col1:
@@ -175,55 +137,44 @@ def dashboard_page():
         st.metric("States Covered", df_ngos["state"].nunique())
         st.markdown("</div>", unsafe_allow_html=True)
 
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("<br>")
 
-    # SDG Distribution
+    # ---- Charts ----
     st.markdown("<div class='section-card'>", unsafe_allow_html=True)
-    st.markdown("<h2>SDG Distribution Overview</h2>", unsafe_allow_html=True)
+    st.subheader("📊 SDG Distribution Overview")
 
-    col1, col2 = st.columns(2)
+    fig1 = px.histogram(df_ngos, x="sdg", title="NGO SDG Focus")
+    fig1.update_layout(paper_bgcolor='rgba(0,0,0,0)',
+                       plot_bgcolor='rgba(0,0,0,0)',
+                       font=dict(color="white"))
+    st.plotly_chart(fig1, use_container_width=True)
 
-    with col1:
-        st.markdown("### NGOs by SDG")
-        st.bar_chart(df_ngos["sdg_goal"].value_counts())
+    fig2 = px.histogram(df_ngos, x="state", title="NGOs by State")
+    fig2.update_layout(paper_bgcolor='rgba(0,0,0,0)',
+                       plot_bgcolor='rgba(0,0,0,0)',
+                       font=dict(color="white"))
+    st.plotly_chart(fig2, use_container_width=True)
 
-    with col2:
-        st.markdown("### Suppliers by SDG")
-        st.bar_chart(df_suppliers["sdg_goal"].value_counts())
+    fig3 = px.histogram(df_ngos, x="trust_score", title="Trust Score Distribution")
+    fig3.update_layout(paper_bgcolor='rgba(0,0,0,0)',
+                       plot_bgcolor='rgba(0,0,0,0)',
+                       font=dict(color="white"))
+    st.plotly_chart(fig3, use_container_width=True)
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # State & Trust
+    # ---- Matchmaking Section ----
     st.markdown("<div class='section-card'>", unsafe_allow_html=True)
-    st.markdown("<h2>Geographic & Trust Insights</h2>", unsafe_allow_html=True)
-
-    col3, col4 = st.columns(2)
-
-    with col3:
-        st.markdown("### NGOs by State")
-        st.bar_chart(df_ngos["state"].value_counts())
-
-    with col4:
-        st.markdown("### Avg Trust Score by State")
-        avg_trust = df_ngos.groupby("state")["trust_score"].mean()
-        st.bar_chart(avg_trust)
-
-    st.markdown("</div>", unsafe_allow_html=True)
-
-    # Matchmaking Info
-    st.markdown("<div class='section-card'>", unsafe_allow_html=True)
-    st.markdown("<h2>🤝 AI Partnership Matchmaking</h2>", unsafe_allow_html=True)
+    st.markdown("## 🤝 AI Partnership Matchmaking")
 
     st.markdown("""
-Bridge 17 intelligently connects CSR initiatives with the most suitable NGOs 
-and Suppliers based on:
+Bridge 17’s AI Matchmaking Engine connects CSR initiatives 
+with the most suitable NGOs and Suppliers using:
 
 - 🎯 SDG Alignment  
-- 📍 Geographic Location  
-- ⭐ Trust & Reliability Scores  
-- 📊 Data-driven ranking  
-
-Launch the Matchmaking Engine to begin partner discovery.
+- 📍 Geographic Matching  
+- ⭐ Trust Score Ranking  
+- 📊 Data-driven scoring
 """)
 
     if st.button("🚀 Launch Matchmaking Engine"):
@@ -237,104 +188,57 @@ Launch the Matchmaking Engine to begin partner discovery.
 # ----------------------------
 def matchmaking_page():
 
-    df_suppliers = load_suppliers()
-    df_ngos = load_ngos()
-
     st.markdown("<h1 style='text-align:center;'>🤖 AI Matchmaking Engine</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center; color:lightgray;'>Precision Partner Discovery Platform</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center; color:lightgray;'>Precision Partner Discovery for Sustainable Development</p>", unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
+
+    st.markdown("<div class='section-card'>", unsafe_allow_html=True)
+
+    mode = st.radio("Select Mode:",
+                    ["Upload CSR File (Auto Match)",
+                     "Manual Search"])
+
+    if mode == "Upload CSR File (Auto Match)":
+
+        uploaded_file = st.file_uploader("Upload CSR JSON file", type=["json"])
+
+        if uploaded_file:
+            csr_data = json.load(uploaded_file)
+
+            sdg = csr_data.get("sdg")
+            state = csr_data.get("state")
+
+            matches = df_ngos[
+                (df_ngos["sdg"] == sdg) &
+                (df_ngos["state"] == state)
+            ].sort_values(by="trust_score", ascending=False)
+
+            st.success("Top Matches Found:")
+            st.dataframe(matches)
+
+    else:
+
+        selected_sdg = st.selectbox("Select SDG", df_ngos["sdg"].unique())
+        selected_state = st.selectbox("Select State", df_ngos["state"].unique())
+
+        matches = df_ngos[
+            (df_ngos["sdg"] == selected_sdg) &
+            (df_ngos["state"] == selected_state)
+        ].sort_values(by="trust_score", ascending=False)
+
+        st.success("Top Matches:")
+        st.dataframe(matches)
 
     if st.button("⬅ Back to Dashboard"):
         st.session_state.page = "dashboard"
         st.rerun()
 
-    st.markdown("<div class='section-card'>", unsafe_allow_html=True)
-
-    mode = st.radio(
-        "Choose Matching Mode",
-        ["Auto Match via CSR Upload", "Manual Search"]
-    )
-
-    if mode == "Auto Match via CSR Upload":
-
-        uploaded_file = st.file_uploader("Upload CSR Report (TXT only)")
-
-        if uploaded_file is not None:
-            content = uploaded_file.read().decode("utf-8")
-            st.session_state.history.append(uploaded_file.name)
-
-            detected_sdg = extract_sdg(content)
-            detected_state = extract_state(content, df_suppliers["state"].unique())
-
-            st.write(f"Detected SDG: {detected_sdg}")
-            st.write(f"Detected State: {detected_state}")
-
-            if st.button("Run Auto Matching"):
-
-                matched_ngos = df_ngos[
-                    (df_ngos["sdg_goal"].str.contains(detected_sdg, na=False)) &
-                    (df_ngos["state"] == detected_state)
-                ].sort_values(by="trust_score", ascending=False)
-
-                matched_suppliers = df_suppliers[
-                    (df_suppliers["sdg_goal"].str.contains(detected_sdg, na=False)) &
-                    (df_suppliers["state"] == detected_state)
-                ].sort_values(by="reliability", ascending=False)
-
-                st.subheader("Top NGO Matches")
-                st.dataframe(matched_ngos.head(5))
-
-                st.subheader("Top Supplier Matches")
-                st.dataframe(matched_suppliers.head(5))
-
-    elif mode == "Manual Search":
-
-        selected_state = st.selectbox("Select State", df_ngos["state"].unique())
-        selected_sdg = st.selectbox("Select SDG", df_ngos["sdg_goal"].unique())
-
-        if st.button("Search"):
-
-            matched_ngos = df_ngos[
-                (df_ngos["sdg_goal"] == selected_sdg) &
-                (df_ngos["state"] == selected_state)
-            ].sort_values(by="trust_score", ascending=False)
-
-            matched_suppliers = df_suppliers[
-                (df_suppliers["sdg_goal"] == selected_sdg) &
-                (df_suppliers["state"] == selected_state)
-            ].sort_values(by="reliability", ascending=False)
-
-            st.subheader("Matching NGOs")
-            st.dataframe(matched_ngos)
-
-            st.subheader("Matching Suppliers")
-            st.dataframe(matched_suppliers)
-
     st.markdown("</div>", unsafe_allow_html=True)
 
 # ----------------------------
-# SIDEBAR
+# ROUTER
 # ----------------------------
-def sidebar():
-    with st.sidebar:
-        st.title("Bridge 17")
-        st.write(f"👤 {st.session_state.username}")
-        st.write(f"🏢 {st.session_state.sector}")
-        st.markdown("---")
-
-        if st.button("Logout"):
-            st.session_state.logged_in = False
-            st.session_state.page = "dashboard"
-            st.rerun()
-
-# ----------------------------
-# ROUTING
-# ----------------------------
-if not st.session_state.logged_in:
-    login_page()
+if st.session_state.page == "dashboard":
+    dashboard_page()
 else:
-    sidebar()
-    if st.session_state.page == "dashboard":
-        dashboard_page()
-    elif st.session_state.page == "matchmaking":
-        matchmaking_page()
+    matchmaking_page()
