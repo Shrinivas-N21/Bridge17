@@ -131,6 +131,29 @@ input, textarea, .stTextInput input {
 [data-testid="stMetric"] * {
     color: #F1F5F9 !important;
 }
+/* ============================= */
+/* SELECTBOX TEXT BLACK */
+/* ============================= */
+
+/* Selected value text */
+div[data-baseweb="select"] > div {
+    color: black !important;
+}
+
+/* Dropdown input text */
+div[data-baseweb="select"] input {
+    color: black !important;
+}
+
+/* Dropdown menu items */
+div[role="listbox"] * {
+    color: black !important;
+}
+
+/* Optional: make dropdown background white for contrast */
+div[role="listbox"] {
+    background-color: white !important;
+}
 
 </style>
 """, unsafe_allow_html=True)
