@@ -25,9 +25,16 @@ st.markdown("""
     background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
 }
 
-/* Default Light Text */
-html, body, [class*="css"]  {
-    color: #E6EDF3 !important;   /* Soft light blue-white */
+/* ============================= */
+/* FORCE LIGHT TEXT EVERYWHERE */
+/* ============================= */
+html, body, [class*="css"], div, p, span, label, li {
+    color: #E6EDF3 !important;
+}
+
+/* Fix markdown containers specifically */
+div[data-testid="stMarkdownContainer"] * {
+    color: #E6EDF3 !important;
 }
 
 /* ============================= */
@@ -47,7 +54,7 @@ html, body, [class*="css"]  {
 h1 {
     font-size: 52px !important;
     font-weight: 800 !important;
-    color: #F8FAFC !important;   /* Slightly brighter */
+    color: #F8FAFC !important;
 }
 
 h2 {
@@ -61,11 +68,6 @@ h3 {
     color: #CBD5E1 !important;
 }
 
-/* Paragraph & Normal Text */
-p, span, label {
-    color: #D1D9E6 !important;
-}
-
 /* ============================= */
 /* METRIC CARDS */
 /* ============================= */
@@ -75,7 +77,7 @@ p, span, label {
     border-radius: 15px;
     text-align: center;
     backdrop-filter: blur(8px);
-    color: #F1F5F9;
+    color: #F1F5F9 !important;
 }
 
 /* ============================= */
@@ -87,7 +89,7 @@ p, span, label {
     border-radius: 18px;
     margin-bottom: 30px;
     backdrop-filter: blur(10px);
-    color: #E6EDF3;
+    color: #E6EDF3 !important;
 }
 
 /* ============================= */
@@ -95,7 +97,7 @@ p, span, label {
 /* ============================= */
 .stButton>button {
     background: linear-gradient(90deg, #00c6ff, #0072ff);
-    color: #F8FAFC;
+    color: #F8FAFC !important;
     border-radius: 10px;
     height: 50px;
     font-weight: 600;
@@ -111,7 +113,7 @@ p, span, label {
 /* ============================= */
 /* INPUT FIELDS */
 /* ============================= */
-input, textarea {
+input, textarea, .stTextInput input {
     background-color: #1e293b !important;
     color: #F1F5F9 !important;
 }
@@ -119,18 +121,20 @@ input, textarea {
 /* ============================= */
 /* DATAFRAME */
 /* ============================= */
-[data-testid="stDataFrame"] {
-    background-color: rgba(255,255,255,0.04);
+[data-testid="stDataFrame"] * {
     color: #E6EDF3 !important;
 }
 
-/* Metrics */
-[data-testid="stMetric"] {
+/* ============================= */
+/* METRICS */
+/* ============================= */
+[data-testid="stMetric"] * {
     color: #F1F5F9 !important;
 }
 
 </style>
 """, unsafe_allow_html=True)
+
 
 
 # ----------------------------
